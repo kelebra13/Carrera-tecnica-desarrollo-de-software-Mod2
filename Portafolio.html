@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sitio en Mantenimiento</title> 
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh; /* Usar min-height para que crezca si el contenido es mucho Nuevo e interesante para mi*/
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            flex-direction: column;
+            text-align: center;
+            background-color: #e0f7fa; 
+            padding: 20px;
+            box-sizing: border-box; 
+        }
+        
+        .container {
+            background-color: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            width: 100%;
+        }
+
+        h1 {
+            color: #333;
+            font-size: 2.8em;
+            margin-bottom: 15px;
+        }
+
+        p {
+            color: #555;
+            font-size: 1.1em;
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+
+        .maintenance-image {
+            max-width: 80%; /* Para que la imagen se adapte mejor */
+            height: auto;
+            margin-bottom: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+        }
+
+        .notify-form {
+            margin-top: 20px;
+        }
+
+        .notify-form label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: bold;
+            color: #444;
+            font-size: 1.05em;
+        }
+
+        .notify-form input[type="email"] {
+            width: calc(100% - 22px); /* Ancho completo menos padding y border */
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 1em;
+            margin-bottom: 15px;
+            transition: border-color 0.3s ease;
+        }
+
+        .notify-form input[type="email"]:focus {
+            border-color: #46dcf7;
+            outline: none;
+        }
+
+        .notify-form button {
+            background-color: #46dcf7;
+            color: black;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.05em;
+            font-weight: bold;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        .notify-form button:hover {
+            background-color: #2ab5c9;
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Bajo mantenimiento</h1>
+        
+        <p>Disculpa las molestias. Estamos realizando mejoras importantes y volveremos pronto.</p>
+        
+        <img src="pagina-en-mantenimiento.jpg" 
+             class="maintenance-image"> 
+             <form class="notify-form" action="#" method="post">
+            <label for="email_notificacion">Déjanos tu correo electrónico para avisarte cuando estemos de vuelta:</label>
+            <input type="email" id="email_notificacion" name="email_notificacion" placeholder="tu.correo@ejemplo.com" required>
+            <button type="submit">Avisarme cuando esté disponible</button>
+        </form>
+    </div>
+    <a href="index.html">Volver a la página de inicio (Index)</a>
+</body>
+</html>
