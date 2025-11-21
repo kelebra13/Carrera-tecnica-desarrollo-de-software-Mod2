@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Calculadora de Área y Perímetro</title>
+	<style>
+		body {
+			font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+			background-color: #e9ecef;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			min-height: 100vh;
+			margin: 0;
+			padding: 20px;
+		}
+
+		.contenedor-principal {
+			display: flex;
+			flex-wrap: wrap;
+			gap: 30px;
+			max-width: 1000px;
+			justify-content: center;
+		}
+
+		.calculadora-geometrica {
+			background-color: #ffffff;
+			padding: 30px;
+			border-radius: 10px;
+			box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+			width: 320px;
+			max-width: 90%;
+		}
+
+		.instrucciones {
+			background-color: #ffffff;
+			padding: 30px;
+			border-radius: 10px;
+			box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+			width: 320px;
+			max-width: 90%;
+		}
+
+		h1 {
+			margin-top: 0;
+			color: #007bff;
+			text-align: center;
+			font-size: 1.8em;
+			margin-bottom: 25px;
+		}
+
+		h2 {
+			color: #495057;
+			font-size: 1.4em;
+			margin-top: 0;
+		}
+
+		.control-grupo {
+			margin-bottom: 15px;
+		}
+
+		.control-grupo label {
+			display: block;
+			margin-bottom: 5px;
+			font-weight: bold;
+			color: #495057;
+		}
+
+		select,
+		input[type="number"] {
+			width: 100%;
+			padding: 10px;
+			border: 1px solid #ced4da;
+			border-radius: 5px;
+			box-sizing: border-box;
+		}
+
+		#campos-entrada {
+			margin-top: 20px;
+		}
+
+		.campo-contenedor {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			margin-bottom: 15px;
+		}
+
+		.campo-contenedor input {
+			width: 60%;
+		}
+
+		#btn-calcular {
+			width: 100%;
+			padding: 10px;
+			background-color: #28a745;
+			color: white;
+			border: none;
+			border-radius: 5px;
+			cursor: pointer;
+			font-size: 1em;
+			transition: background-color 0.3s;
+			margin-top: 15px;
+		}
+        #btn-regresar {
+			width: 100%;
+			padding: 10px;
+			background-color: #28a745;
+			color: white;
+			border: none;
+			border-radius: 5px;
+			cursor: pointer;
+			font-size: 1em;
+			transition: background-color 0.3s;
+			margin-top: 15px;
+		}
+
+		#btn-calcular:hover {
+			background-color: #218838;
+		}
+
+		#resultados-geometricos {
+			margin-top: 25px;
+			padding: 15px;
+			background-color: #f8f9fa;
+			border-radius: 5px;
+			border-left: 5px solid #007bff;
+			text-align: center;
+			display: none;
+		}
+
+		#resultados-geometricos p {
+			margin: 5px 0;
+			font-size: 1.1em;
+			color: #343a40;
+		}
+
+		.error {
+			color: red;
+			font-weight: bold;
+		}
+
+		#canvas-container {
+			margin-top: 25px;
+			text-align: center;
+		}
+
+		#canvas-figura {
+			border: 1px solid #ced4da;
+			border-radius: 5px;
+			background-color: #f8f9fa;
+			display: none;
+		}
+
+		.instrucciones ol {
+			padding-left: 20px;
+		}
+
+		.instrucciones li {
+			margin-bottom: 10px;
+			line-height: 1.4;
+		}
+	</style>
+</head>
+
+<body>
+	<div class="contenedor-principal">
+		<div class="calculadora-geometrica">
+			<h1>Cálculo Geométrico</h1>
+			<div class="control-grupo">
+				<label for="figura">Selecciona una figura:</label>
+				<select id="figura" onchange="mostrarCampos()">
+					<option value="triangulo">Triángulo</option>
+					<option value="circulo">Círculo</option>
+					<option value="rectangulo">Rectángulo</option>
+					<option value="cuadrado">Cuadrado</option>
+					<option value="paralelogramo">Paralelogramo</option>
+				</select>
+			</div>
+
+			<div id="campos-entrada">
+				<div class="campo-contenedor" id="largo-div">
+					<label for="largo">Largo/Lado:</label>
+					<input type="number" id="largo" min="0" step="any">
+				</div>
+				<div class="campo-contenedor" id="ancho-div">
+					<label for="ancho">Ancho:</label>
+					<input type="number" id="ancho" min="0" step="any">
+				</div>
+				<div class="campo-contenedor" id="base-div">
+					<label for="base">Base:</label>
+					<input type="number" id="base" min="0" step="any">
+				</div>
+				<div class="campo-contenedor" id="altura-div">
+					<label for="altura">Altura:</label>
+					<input type="number" id="altura" min="0" step="any">
+				</div>
+				<div class="campo-contenedor" id="radio-div">
+					<label for="radio">Radio:</label>
+					<input type="number" id="radio" min="0" step="any">
+				</div>
+				<div class="campo-contenedor" id="ladoB-div">
+					<label for="ladoB">Lado B (Triángulo):</label>
+					<input type="number" id="ladoB" min="0" step="any">
+				</div>
+				<div class="campo-contenedor" id="ladoC-div">
+					<label for="ladoC">Lado C (Triángulo):</label>
+					<input type="number" id="ladoC" min="0" step="any">
+				</div>
+			</div>
+
+			<button id="btn-calcular">Calcular</button>
+            <button id="btn-regresar">Regresar</button>
+
+			<div id="canvas-container">
+				<canvas id="canvas-figura" width="300" height="200"></canvas>
+			</div>
+
+			<div id="resultados-geometricos">
+				<p id="area-resultado">Área: 0</p>
+				<p id="perimetro-resultado">Perímetro: 0</p>
+			</div>
+		</div>
+
+		<div class="instrucciones">
+			<h2>Instrucciones de Uso</h2>
+			<ol>
+				<li>Selecciona la figura geométrica que deseas calcular</li>
+				<li>Ingresa los valores requeridos en los campos que se muestran</li>
+				<li>Asegúrate de que todos los valores sean positivos</li>
+				<li>Haz clic en el botón "Calcular"</li>
+				<li>Observa los resultados del área y perímetro</li>
+				<li>La figura se dibujará en el área de visualización</li>
+			</ol>
+			<p><strong>Nota:</strong> Para el triángulo, necesitas al menos la base y la altura para calcular el área. Para el perímetro, necesitas los tres lados.</p>
+		</div>
+	</div>
+
+	<script>
+		// Variables globales
+		const canvas = document.getElementById('canvas-figura');
+		const ctx = canvas.getContext('2d');
+
+		// Función para mostrar los campos según la figura seleccionada
+		function mostrarCampos() {
+			const figura = document.getElementById("figura").value;
+			document.getElementById("resultados-geometricos").style.display = "none";
+			canvas.style.display = "none";
+
+			const divs = [
+				"largo-div", "ancho-div", "base-div",
+				"altura-div", "radio-div", "ladoB-div", "ladoC-div"
+			];
+
+			for (const div of divs) {
+				document.getElementById(div).style.display = "none";
+				// Limpiar valores al cambiar de figura
+				const input = document.getElementById(div.replace('-div', ''));
+				if (input) input.value = '';
+			}
+
+			if (figura === "rectangulo") {
+				document.getElementById("largo-div").style.display = "flex";
+				document.getElementById("ancho-div").style.display = "flex";
+				document.getElementById("largo-div").querySelector('label').textContent = 'Largo:';
+			} else if (figura === "triangulo") {
+				// Para área necesitamos base y altura
+				document.getElementById("base-div").style.display = "flex";
+				document.getElementById("altura-div").style.display = "flex";
+				// Para perímetro necesitamos los tres lados
+				document.getElementById("ladoB-div").style.display = "flex";
+				document.getElementById("ladoC-div").style.display = "flex";
+				// Reutilizamos 'base' como 'lado A' del triángulo
+				document.getElementById("base-div").querySelector('label').textContent = 'Lado A:';
+			} else if (figura === "circulo") {
+				document.getElementById("radio-div").style.display = "flex";
+			} else if (figura === "cuadrado") {
+				// Usamos 'largo' como lado del cuadrado
+				document.getElementById("largo-div").style.display = "flex";
+				document.getElementById("largo-div").querySelector('label').textContent = 'Lado:';
+			} else if (figura === "paralelogramo") {
+				document.getElementById("base-div").style.display = "flex";
+				document.getElementById("altura-div").style.display = "flex";
+				// También necesitamos un segundo lado para el perímetro
+				document.getElementById("ancho-div").style.display = "flex";
+				document.getElementById("ancho-div").querySelector('label').textContent = 'Lado Adyacente:';
+			}
+		}
+
+		// Función para calcular área y perímetro
+		function calcular() {
+			const figura = document.getElementById("figura").value;
+			const areaElement = document.getElementById("area-resultado");
+			const perimeterElement = document.getElementById("perimetro-resultado");
+			const resultadosDiv = document.getElementById("resultados-geometricos");
+
+			let area = 0,
+				perimetro = 0;
+			let error = false;
+
+			try {
+				if (figura === "rectangulo") {
+					const largo = obtenerValor("largo");
+					const ancho = obtenerValor("ancho");
+					if (isNaN(largo) || isNaN(ancho)) throw new Error("Entrada no válida.");
+					area = largo * ancho;
+					perimetro = 2 * (largo + ancho);
+					dibujarRectangulo(largo, ancho);
+
+				} else if (figura === "triangulo") {
+					const base = obtenerValor("base");
+					const altura = obtenerValor("altura");
+					const ladoB = obtenerValor("ladoB");
+					const ladoC = obtenerValor("ladoC");
+
+					// Área (Base * Altura)
+					if (isNaN(base) || isNaN(altura)) throw new Error("Base y Altura requeridas para el área.");
+					area = 0.5 * base * altura;
+
+					// Perímetro (Lado A + Lado B + Lado C)
+					if (isNaN(base) || isNaN(ladoB) || isNaN(ladoC)) {
+						perimetro = "Calcular con lados A, B y C";
+					} else {
+						perimetro = base + ladoB + ladoC;
+					}
+					dibujarTriangulo(base, altura, ladoB, ladoC);
+
+				} else if (figura === "circulo") {
+					const radio = obtenerValor("radio");
+					if (isNaN(radio)) throw new Error("Radio no válido.");
+					area = Math.PI * Math.pow(radio, 2);
+					perimetro = 2 * Math.PI * radio; // Circunferencia
+					dibujarCirculo(radio);
+
+				} else if (figura === "cuadrado") {
+					const lado = obtenerValor("largo"); // Reutilizamos 'largo'
+					if (isNaN(lado)) throw new Error("Lado no válido.");
+					area = lado * lado;
+					perimetro = 4 * lado;
+					dibujarCuadrado(lado);
+
+				} else if (figura === "paralelogramo") {
+					const base = obtenerValor("base");
+					const altura = obtenerValor("altura");
+					const ladoAdyacente = obtenerValor("ancho"); // Reutilizamos 'ancho'
+					if (isNaN(base) || isNaN(altura) || isNaN(ladoAdyacente)) throw new Error("Entrada(s) requerida(s) no válida(s).");
+					area = base * altura;
+					perimetro = 2 * (base + ladoAdyacente);
+					dibujarParalelogramo(base, altura, ladoAdyacente);
+				}
+
+			} catch (e) {
+				areaElement.textContent = `Área: ${e.message}`;
+				perimeterElement.textContent = "Perímetro: Error";
+				resultadosDiv.style.display = "block";
+				error = true;
+			}
+
+			if (!error) {
+				areaElement.textContent = `Área: ${typeof area === 'number' ? area.toFixed(2) : area}`;
+				perimeterElement.textContent = `Perímetro: ${typeof perimetro === 'number' ? perimetro.toFixed(2) : perimetro}`;
+				resultadosDiv.style.display = "block";
+			}
+		}
+
+		// Función para obtener valores numéricos
+		function obtenerValor(id) {
+			const valor = parseFloat(document.getElementById(id).value);
+			// Validación: asegurarse de que el valor es un número positivo o cero.
+			if (valor < 0 || isNaN(valor)) {
+				return NaN;
+			}
+			return valor;
+		}
+
+		// Funciones para dibujar figuras
+		function dibujarRectangulo(largo, ancho) {
+			// Limpiar canvas
+			ctx.clearRect(0, 0, canvas.width, canvas.height);
+			
+			// Escalar para que quepa en el canvas
+			const escala = Math.min(200 / Math.max(largo, ancho), 1);
+			const x = (canvas.width - largo * escala) / 2;
+			const y = (canvas.height - ancho * escala) / 2;
+			
+			// Dibujar rectángulo
+			ctx.beginPath();
+			ctx.rect(x, y, largo * escala, ancho * escala);
+			ctx.strokeStyle = '#007bff';
+			ctx.lineWidth = 2;
+			ctx.stroke();
+			
+			// Etiquetas
+			ctx.fillStyle = '#495057';
+			ctx.font = '12px Arial';
+			ctx.fillText(`Largo: ${largo}`, x + 5, y - 5);
+			ctx.fillText(`Ancho: ${ancho}`, x + largo * escala + 5, y + ancho * escala / 2);
+			
+			canvas.style.display = "block";
+		}
+
+		function dibujarTriangulo(base, altura, ladoB, ladoC) {
+			ctx.clearRect(0, 0, canvas.width, canvas.height);
+			
+			// Escalar para que quepa en el canvas
+			const escala = Math.min(180 / Math.max(base, altura, ladoB, ladoC), 1);
+			const x = (canvas.width - base * escala) / 2;
+			const y = (canvas.height + altura * escala) / 2;
+			
+			// Dibujar triángulo
+			ctx.beginPath();
+			ctx.moveTo(x, y);
+			ctx.lineTo(x + base * escala, y);
+			ctx.lineTo(x + base * escala / 2, y - altura * escala);
+			ctx.closePath();
+			ctx.strokeStyle = '#007bff';
+			ctx.lineWidth = 2
+			ctx.stroke();
+			
+			// Etiquetas
+			ctx.fillStyle = '#495057';
+			ctx.font = '12px Arial';
+			ctx.fillText(`Base: ${base}`, x + base * escala / 2 - 20, y + 15);
+			ctx.fillText(`Altura: ${altura}`, x - 30, y - altura * escala / 2);
+			
+			canvas.style.display = "block";
+		}
+
+		function dibujarCirculo(radio) {
+			ctx.clearRect(0, 0, canvas.width, canvas.height);
+			
+			// Escalar para que quepa en el canvas
+			const escala = Math.min(80 / radio, 1);
+			const x = canvas.width / 2;
+			const y = canvas.height / 2;
+			
+			// Dibujar círculo
+			ctx.beginPath();
+			ctx.arc(x, y, radio * escala, 0, 2 * Math.PI);
+			ctx.strokeStyle = '#007bff';
+			ctx.lineWidth = 2;
+			ctx.stroke();
+			
+			// Radio
+			ctx.beginPath();
+			ctx.moveTo(x, y);
+			ctx.lineTo(x + radio * escala, y);
+			ctx.strokeStyle = '#28a745';
+			ctx.lineWidth = 2;
+			ctx.stroke();
+			
+			// Etiquetas
+			ctx.fillStyle = '#495057';
+			ctx.font = '12px Arial';
+			ctx.fillText(`Radio: ${radio}`, x + radio * escala / 2, y - 10);
+			
+			canvas.style.display = "block";
+		}
+
+		function dibujarCuadrado(lado) {
+			ctx.clearRect(0, 0, canvas.width, canvas.height);
+			
+			// Escalar para que quepa en el canvas
+			const escala = Math.min(200 / lado, 1);
+			const x = (canvas.width - lado * escala) / 2;
+			const y = (canvas.height - lado * escala) / 2;
+			
+			// Dibujar cuadrado
+			ctx.beginPath();
+			ctx.rect(x, y, lado * escala, lado * escala);
+			ctx.strokeStyle = '#007bff';
+			ctx.lineWidth = 2;
+			ctx.stroke();
+			
+			// Etiquetas
+			ctx.fillStyle = '#495057';
+			ctx.font = '12px Arial';
+			ctx.fillText(`Lado: ${lado}`, x + lado * escala / 2 - 15, y - 5);
+			
+			canvas.style.display = "block";
+		}
+
+		function dibujarParalelogramo(base, altura, ladoAdyacente) {
+			ctx.clearRect(0, 0, canvas.width, canvas.height);
+			
+			// Escalar para que quepa en el canvas
+			const escala = Math.min(180 / Math.max(base, altura, ladoAdyacente), 1);
+			const x = (canvas.width - base * escala) / 2;
+			const y = (canvas.height + altura * escala) / 2;
+			
+			// Dibujar paralelogramo
+			ctx.beginPath();
+			ctx.moveTo(x, y);
+			ctx.lineTo(x + base * escala, y);
+			ctx.lineTo(x + base * escala + 20, y - altura * escala);
+			ctx.lineTo(x + 20, y - altura * escala);
+			ctx.closePath();
+			ctx.strokeStyle = '#007bff';
+			ctx.lineWidth = 2;
+			ctx.stroke();
+			
+			// Etiquetas
+			ctx.fillStyle = '#495057';
+			ctx.font = '12px Arial';
+			ctx.fillText(`Base: ${base}`, x + base * escala / 2 - 15, y + 15);
+			ctx.fillText(`Altura: ${altura}`, x - 30, y - altura * escala / 2);
+			ctx.fillText(`Lado: ${ladoAdyacente}`, x + base * escala + 10, y - altura * escala / 2);
+			
+			canvas.style.display = "block";
+		}
+
+		// Event listener para el botón
+		document.getElementById('btn-calcular').addEventListener('click', calcular);
+
+		// Inicializar la vista
+		mostrarCampos();
+        const button = document.getElementById('btn-regresar');
+        button.addEventListener('click', function() {
+    window.location.href = 'index.html'; 
+  });
+        
+	</script>
+</body>
+ 
+</html>

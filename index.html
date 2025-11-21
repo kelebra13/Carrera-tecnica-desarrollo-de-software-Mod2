@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <script defer src="main.js"></script>
 <style>
 p {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif, sans-serif;
@@ -17,6 +16,13 @@ nav {
     border-radius: 25px;
     margin: 20px;
   font-size: 30px;
+}
+
+.bienvenida-personalizada {
+    color: #2c3e50;
+    font-size: 2.5em;
+    text-align: center;
+    margin: 20px 0;
 }
 
 </style>
@@ -38,7 +44,83 @@ nav {
         <li><a href="AboutMe.html">About me</a></li>
         <li><a href="Contactame.html">Contact</a></li>
         <li><a href="TablasPoryectos.html">Practica</a></li>
+        <li><a href="Calculadora.html">Calculadora</a></li>
     </ul>
 </nav>
+
+<script>
+// Verificar si ya tenemos datos guardados al cargar la página
+window.addEventListener('DOMContentLoaded', function() {
+    const nombreGuardado = localStorage.getItem('nombreUsuario');
+    const edadGuardada = localStorage.getItem('edadUsuario');
+    const saludo = document.getElementById('bienvenida');
+    
+    if (nombreGuardado && edadGuardada) {
+        // Si ya tenemos datos, mostramos el saludo personalizado
+        actualizarSaludo(nombreGuardado, edadGuardada);
+    } else {
+        // Si no hay datos, pedimos la información con prompt
+        solicitarDatos();
+    }
+});
+
+function solicitarDatos() {
+    let nombre = prompt("Por favor, ingresa tu nombre:");
+    
+    // Validar que se ingresó un nombre
+    while (!nombre || nombre.trim() === '') {
+        nombre = prompt("Por favor, ingresa un nombre válido:");
+    }
+    
+    let edad = prompt("Por favor, ingresa tu edad:");
+    
+    // Validar que se ingresó una edad válida
+    while (!edad || isNaN(edad) || edad < 1 || edad > 120) {
+        edad = prompt("Por favor, ingresa una edad válida (entre 1 y 120):");
+    }
+    
+    // Guardar en localStorage
+    localStorage.setItem('nombreUsuario', nombre.trim());
+    localStorage.setItem('edadUsuario', edad);
+    
+   
+    actualizarSaludo(nombre.trim(), edad);
+    
+ 
+  //  alert(`¡Bienvenido ${nombre.trim()}! Tus datos han sido guardados.`);
+}
+
+function actualizarSaludo(nombre, edad) {
+    const saludo = document.getElementById('bienvenida');
+    saludo.textContent = `Sea usted bienvenido, ${nombre} (${edad} años)`;
+    saludo.className = 'bienvenida-personalizada'; 
+}
+
+// Función para cambiar los datos
+function cambiarDatos() {
+    if (confirm("¿Deseas cambiar tu nombre y/o edad?")) {
+        solicitarDatos();
+    }
+}
+
+// botón para cambiar datos
+const botonCambiar = document.createElement('button');
+botonCambiar.textContent = 'Cambiar mis datos';
+botonCambiar.style.cssText = `
+    display: block;
+    margin: 20px auto;
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #3498db;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+`;
+botonCambiar.addEventListener('click', cambiarDatos);
+document.body.appendChild(botonCambiar);
+
+</script>
+
 </body>
 </html>
